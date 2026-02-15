@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Consultations - CarHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .page-header {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin: 40px 0 30px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .page-header h2 {
+        margin: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+    }
+    
+    .card-custom {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border: none;
+        overflow: hidden;
+    }
+    
+    .card-header-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px 30px;
+        border: none;
+    }
+    
+    .card-header-custom h5 {
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .btn-book-new {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-book-new:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .table-custom {
+        margin: 0;
+    }
+    
+    .table-custom thead {
+        background: #f8f9fa;
+    }
+    
+    .table-custom th {
+        font-weight: 600;
+        color: #667eea;
+        border: none;
+        padding: 15px;
+    }
+    
+    .table-custom td {
+        padding: 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .table-custom tbody tr:hover {
+        background: #f8f9ff;
+    }
+    
+    .badge-custom {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-state i {
+        font-size: 5rem;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h4 {
+        color: #666;
+        margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+        color: #999;
+        margin-bottom: 25px;
+    }
+    
+    .vendor-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .vendor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+    
+    .vendor-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 auto 15px;
+    }
+    
+    .vendor-card h6 {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .vendor-expertise {
+        color: #667eea;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .vendor-rate {
+        color: #28a745;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+    
+    .btn-view {
+        background: #17a2b8;
+        border: none;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 8px;
+    }
+    
+    .btn-join {
+        background: #28a745;
+        border: none;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 8px;
+    }
+    
+    .btn-cancel {
+        background: #dc3545;
+        border: none;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    
+    .btn-view:hover, .btn-join:hover, .btn-cancel:hover {
+        opacity: 0.85;
+        color: white;
+    }
+    
+    .cancel-form {
+        display: inline;
+        margin: 0;
+        padding: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .table-responsive {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h2><i class="bi bi-calendar-week"></i> My Consultations</h2>
+            <p class="text-muted mb-0">Manage your consultation bookings</p>
+        </div>
+        <a href="{% url 'book_consultation' %}" class="btn btn-book-new">
+            <i class="bi bi-calendar-plus"></i> Book New Consultation
+        </a>
+    </div>
+
+    <!-- Consultations Table Card -->
+    <div class="card-custom mb-4">
+        <div class="card-header-custom">
+            <h5><i class="bi bi-clock-history"></i> Upcoming Consultations</h5>
+        </div>
+        <div class="card-body p-0">
+            {% if consultations %}
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th><i class="bi bi-calendar-date"></i> Date</th>
+                                <th><i class="bi bi-clock"></i> Time</th>
+                                <th><i class="bi bi-person"></i> Vendor</th>
+                                <th><i class="bi bi-box"></i> Product</th>
+                                <th><i class="bi bi-flag"></i> Status</th>
+                                <th><i class="bi bi-gear"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for consultation in consultations %}
+                            <tr>
+                                <td>
+                                    <strong>{{ consultation.date|date:"M d, Y" }}</strong>
+                                </td>
+                                <td>
+                                    {{ consultation.start_time|time:"g:i A" }} - {{ consultation.end_time|time:"g:i A" }}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2" style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                            {{ consultation.vendor.user.get_full_name|first }}
+                                        </div>
+                                        {{ consultation.vendor.user.get_full_name }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if consultation.product %}
+                                        <i class="bi bi-box-seam text-primary"></i> {{ consultation.product.name }}
+                                    {% else %}
+                                        <span class="text-muted">General Consultation</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge badge-custom 
+                                        {% if consultation.status == 'confirmed' %}bg-success
+                                        {% elif consultation.status == 'pending' %}bg-warning text-dark
+                                        {% elif consultation.status == 'completed' %}bg-info
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ consultation.get_status_display|upper }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'consultation_detail' consultation.id %}" 
+                                           class="btn btn-view btn-sm">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                        {% if consultation.status == 'confirmed' %}
+                                            <a href="{{ consultation.meeting_link }}" 
+                                               class="btn btn-join btn-sm"
+                                               target="_blank">
+                                                <i class="bi bi-camera-video"></i> Join
+                                            </a>
+                                        {% endif %}
+                                        {% if consultation.status == 'pending' %}
+                                            <form method="POST" action="{% url 'cancel_consultation' consultation.id %}" class="cancel-form">
+                                                {% csrf_token %}
+                                                <button type="submit" 
+                                                        class="btn btn-cancel btn-sm"
+                                                        onclick="return confirm('Are you sure you want to cancel this consultation?')">
+                                                    <i class="bi bi-x-circle"></i> Cancel
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-calendar-x"></i>
+                    <h4>No Consultations Yet</h4>
+                    <p>You haven't booked any consultations. Start by booking your first one!</p>
+                    <a href="{% url 'book_consultation' %}" class="btn btn-book-new">
+                        <i class="bi bi-calendar-plus"></i> Book Your First Consultation
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Available Vendors -->
+    <div class="card-custom mb-5">
+        <div class="card-header-custom">
+            <h5><i class="bi bi-people"></i> Available Experts</h5>
+        </div>
+        <div class="card-body p-4">
+            {% if vendors %}
+                <div class="row g-4">
+                    {% for vendor in vendors %}
+                    <div class="col-md-4 col-sm-6">
+                        <div class="vendor-card card">
+                            <div class="card-body text-center p-4">
+                                <div class="vendor-avatar">
+                                    {{ vendor.user.get_full_name|first }}
+                                </div>
+                                <h6>{{ vendor.user.get_full_name }}</h6>
+                                <p class="vendor-expertise">
+                                    <i class="bi bi-award"></i> {{ vendor.expertise }}
+                                </p>
+                                <p class="text-muted small mb-3">
+                                    {{ vendor.bio|truncatewords:15 }}
+                                </p>
+                                <div class="mb-3">
+                                    <span class="vendor-rate">
+                                        ${{ vendor.hourly_rate }}/hour
+                                    </span>
+                                </div>
+                                <a href="{% url 'book_consultation' %}" 
+                                   class="btn btn-book-new w-100">
+                                    <i class="bi bi-calendar-check"></i> Book Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-person-x"></i>
+                    <h5>No Experts Available</h5>
+                    <p class="text-muted">Check back later for available consultation experts.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+{% endblock %}

@@ -1,0 +1,26 @@
+<!-- templates/index.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url={% url 'home' %}">
+    <title>CarHub - Redirecting...</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <h2>CarHub</h2>
+        <p>Redirecting to home page...</p>
+        <p><small>If not redirected, <a href="{% url 'home' %}" style="color: white;">click here</a></small></p>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = '{% url "home" %}';
+        }, 500);
+    </script>
+</body>
+</html>

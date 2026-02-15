@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Book Consultation - CarHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .booking-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    
+    .booking-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+    }
+    
+    .booking-header h2 {
+        margin: 0;
+        font-weight: 700;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-book {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-book:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .btn-back {
+        background: #6c757d;
+        border: none;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+    
+    .btn-back:hover {
+        background: #5a6268;
+        color: white;
+    }
+    
+    .product-info {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .product-info h5 {
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .required {
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <!-- Booking Card -->
+            <div class="booking-card">
+                <div class="booking-header">
+                    <h2><i class="bi bi-calendar-check"></i> Book Consultation</h2>
+                    <p class="mb-0">Schedule a time to discuss your needs</p>
+                </div>
+                
+                <div class="p-4">
+                    
+                    <!-- Product Info (if product exists) -->
+                    {% if product %}
+                    <div class="product-info">
+                        <h5><i class="bi bi-box-seam"></i> Consultation About:</h5>
+                        <p class="mb-0"><strong>{{ product.name }}</strong></p>
+                        <p class="text-muted small mb-0">{{ product.description|truncatewords:20 }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Messages -->
+                    {% if messages %}
+                    <div class="mb-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Booking Form -->
+                    <form method="POST" action="{% if product %}{% url 'book_consultation_product' product.id %}{% else %}{% url 'book_consultation' %}{% endif %}">
+                        {% csrf_token %}
+                        
+                        <div class="row g-3">
+                            <!-- Name -->
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">
+                                    Full Name <span class="required">*</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="name" 
+                                       name="name" 
+                                       placeholder="Enter your name"
+                                       required
+                                       value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}">
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">
+                                    Email <span class="required">*</span>
+                                </label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email" 
+                                       name="email" 
+                                       placeholder="your@email.com"
+                                       required
+                                       value="{% if user.is_authenticated %}{{ user.email }}{% endif %}">
+                            </div>
+                            
+                            <!-- Phone -->
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">
+                                    Phone Number <span class="required">*</span>
+                                </label>
+                                <input type="tel" 
+                                       class="form-control" 
+                                       id="phone" 
+                                       name="phone" 
+                                       placeholder="+92 300 1234567"
+                                       required>
+                            </div>
+                            
+                            <!-- Date -->
+                            <div class="col-md-6">
+                                <label for="date" class="form-label">
+                                    Preferred Date <span class="required">*</span>
+                                </label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       id="date" 
+                                       name="date" 
+                                       min="{{ today }}"
+                                       required>
+                            </div>
+                            
+                            <!-- Time -->
+                            <div class="col-md-6">
+                                <label for="time" class="form-label">
+                                    Preferred Time <span class="required">*</span>
+                                </label>
+                                <input type="time" 
+                                       class="form-control" 
+                                       id="time" 
+                                       name="time" 
+                                       required>
+                            </div>
+                            
+                            <!-- Duration -->
+                            <div class="col-md-6">
+                                <label for="duration" class="form-label">
+                                    Duration
+                                </label>
+                                <select class="form-select" id="duration" name="duration">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30" selected>30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Message -->
+                            <div class="col-12">
+                                <label for="message" class="form-label">
+                                    Message (Optional)
+                                </label>
+                                <textarea class="form-control" 
+                                          id="message" 
+                                          name="message" 
+                                          rows="4" 
+                                          placeholder="Tell us what you'd like to discuss..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Buttons -->
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="btn btn-book">
+                                <i class="bi bi-check-circle"></i> Book Consultation
+                            </button>
+                            <a href="{% if product %}{% url 'detail' product.id %}{% else %}{% url 'home' %}{% endif %}" 
+                               class="btn btn-back">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    // Set minimum date to today
+    document.getElementById('date').min = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

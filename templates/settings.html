@@ -1,0 +1,1491 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Settings & Features - CarHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f5f7fa;
+    }
+    
+    .settings-container {
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+    
+    .settings-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    .settings-header h1 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 2.5rem;
+    }
+    
+    .settings-header p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+    }
+    
+    .settings-body {
+        background: white;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    /* Custom Tabs */
+    .custom-tabs {
+        display: flex;
+        border-bottom: 2px solid #e0e0e0;
+        background: #f8f9fa;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .custom-tabs::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    .custom-tabs::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 2px;
+    }
+    
+    .tab-item {
+        padding: 20px 30px;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .tab-item:hover {
+        background: #fff;
+        color: #667eea;
+    }
+    
+    .tab-item.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+        background: white;
+    }
+    
+    .tab-content {
+        display: none;
+        padding: 40px;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Section Cards */
+    .feature-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .feature-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.1);
+    }
+    
+    .feature-card h4 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    /* Video Call UI */
+    .video-container {
+        position: relative;
+        background: #000;
+        border-radius: 15px;
+        overflow: hidden;
+        aspect-ratio: 16/9;
+        margin-bottom: 20px;
+    }
+    
+    .video-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+    }
+    
+    .video-controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 15px;
+    }
+    
+    .control-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.5rem;
+    }
+    
+    .control-btn.video {
+        background: #667eea;
+        color: white;
+    }
+    
+    .control-btn.audio {
+        background: #28a745;
+        color: white;
+    }
+    
+    .control-btn.screen {
+        background: #17a2b8;
+        color: white;
+    }
+    
+    .control-btn.end {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .control-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .control-btn.active {
+        opacity: 0.5;
+    }
+    
+    /* Recording Animation */
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    
+    .blink {
+        animation: blink 1.5s infinite;
+    }
+    
+    /* Document Chamber */
+    .upload-zone {
+        border: 3px dashed #667eea;
+        border-radius: 15px;
+        padding: 50px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f8f9ff;
+    }
+    
+    .upload-zone:hover {
+        background: #eef2ff;
+        border-color: #764ba2;
+    }
+    
+    .upload-zone i {
+        font-size: 4rem;
+        color: #667eea;
+        margin-bottom: 15px;
+    }
+    
+    .document-list {
+        margin-top: 30px;
+    }
+    
+    .document-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        background: white;
+        transition: all 0.3s ease;
+    }
+    
+    .document-item:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .document-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .document-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .status-badge {
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .status-badge.draft {
+        background: #ffc107;
+        color: #000;
+    }
+    
+    .status-badge.review {
+        background: #17a2b8;
+        color: white;
+    }
+    
+    .status-badge.signed {
+        background: #28a745;
+        color: white;
+    }
+    
+    /* Signature Pad */
+    .signature-pad {
+        border: 2px solid #667eea;
+        border-radius: 10px;
+        background: white;
+        cursor: crosshair;
+        display: block;
+        margin: 20px 0;
+    }
+    
+    /* Payment Section */
+    .wallet-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .wallet-balance {
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 10px 0;
+    }
+    
+    .wallet-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+    }
+    
+    .wallet-btn {
+        flex: 1;
+        padding: 15px;
+        border: 2px solid white;
+        border-radius: 10px;
+        background: transparent;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .wallet-btn:hover {
+        background: white;
+        color: #667eea;
+    }
+    
+    .transaction-table {
+        margin-top: 30px;
+    }
+    
+    .transaction-table table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+    
+    .transaction-table th {
+        background: #f8f9fa;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #667eea;
+    }
+    
+    .transaction-table td {
+        background: white;
+        padding: 20px 15px;
+        border-top: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .transaction-table tr td:first-child {
+        border-left: 1px solid #e0e0e0;
+        border-radius: 10px 0 0 10px;
+    }
+    
+    .transaction-table tr td:last-child {
+        border-right: 1px solid #e0e0e0;
+        border-radius: 0 10px 10px 0;
+    }
+    
+    /* Security Section */
+    .password-strength-meter {
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        margin-top: 10px;
+        overflow: hidden;
+    }
+    
+    .password-strength-bar {
+        height: 100%;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+    }
+    
+    .password-strength-bar.weak {
+        width: 33%;
+        background: #dc3545;
+    }
+    
+    .password-strength-bar.medium {
+        width: 66%;
+        background: #ffc107;
+    }
+    
+    .password-strength-bar.strong {
+        width: 100%;
+        background: #28a745;
+    }
+    
+    .otp-input-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 30px 0;
+    }
+    
+    .otp-input {
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .otp-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    /* Role Selection */
+    .role-card {
+        border: 3px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .role-card:hover {
+        border-color: #667eea;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+    
+    .role-card.active {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+    
+    .role-card i {
+        font-size: 4rem;
+        color: #667eea;
+        margin-bottom: 20px;
+    }
+    
+    .role-card h5 {
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    /* Buttons */
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .btn-outline-custom {
+        border: 2px solid #667eea;
+        color: #667eea;
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        background: transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-custom:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .custom-tabs {
+            flex-wrap: wrap;
+        }
+        
+        .tab-item {
+            flex: 1 1 50%;
+            padding: 15px 20px;
+            font-size: 0.9rem;
+        }
+        
+        .tab-content {
+            padding: 20px;
+        }
+        
+        .wallet-actions {
+            flex-direction: column;
+        }
+        
+        .video-controls {
+            gap: 10px;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container settings-container">
+    
+    <!-- Settings Header -->
+    <div class="settings-header">
+        <h1><i class="bi bi-gear-fill"></i> Settings & Features</h1>
+        <p>Manage all your platform features in one place</p>
+    </div>
+    
+    <!-- Settings Body -->
+    <div class="settings-body">
+        
+        <!-- Custom Tabs -->
+        <div class="custom-tabs">
+            <div class="tab-item active" data-tab="video">
+                <i class="bi bi-camera-video"></i> Video Calling
+            </div>
+            <div class="tab-item" data-tab="documents">
+                <i class="bi bi-file-earmark-text"></i> Documents
+            </div>
+            <div class="tab-item" data-tab="payments">
+                <i class="bi bi-credit-card"></i> Payments
+            </div>
+            <div class="tab-item" data-tab="security">
+                <i class="bi bi-shield-check"></i> Security
+            </div>
+            <div class="tab-item" data-tab="profile">
+                <i class="bi bi-person-circle"></i> Profile
+            </div>
+        </div>
+        
+        <!-- Video Calling Tab -->
+        <div class="tab-content active" id="video">
+            <div class="feature-card">
+                <h4><i class="bi bi-camera-video-fill"></i> Video Consultation</h4>
+                <p class="text-muted mb-4">Start a video call with your consultation partner</p>
+                
+                <div class="video-container">
+                    <!-- Video Element for Live Camera -->
+                    <video id="localVideo" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+                    
+                    <!-- Placeholder when camera is off -->
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <i class="bi bi-camera-video"></i>
+                    </div>
+                    
+                    <!-- Start Call Button -->
+                    <button class="btn btn-success" id="startCallBtn" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; padding: 15px 30px; font-size: 1.2rem; border-radius: 50px;">
+                        <i class="bi bi-telephone-fill"></i> Start Call
+                    </button>
+                    
+                    <div class="video-controls" id="videoControls" style="display: none;">
+                        <button class="control-btn video" id="toggleVideo" title="Toggle Video">
+                            <i class="bi bi-camera-video-fill"></i>
+                        </button>
+                        <button class="control-btn audio" id="toggleAudio" title="Toggle Audio">
+                            <i class="bi bi-mic-fill"></i>
+                        </button>
+                        <button class="control-btn screen" id="toggleScreen" title="Share Screen">
+                            <i class="bi bi-display"></i>
+                        </button>
+                        <button class="control-btn" id="toggleRecording" title="Record Call" style="background: #dc3545; color: white;">
+                            <i class="bi bi-record-circle"></i>
+                        </button>
+                        <button class="control-btn end" id="endCall" title="End Call">
+                            <i class="bi bi-telephone-x-fill"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Recording Status -->
+                    <div id="recordingStatus" style="display: none; position: absolute; top: 20px; left: 20px; background: rgba(220, 53, 69, 0.9); color: white; padding: 10px 20px; border-radius: 25px; font-weight: 600; z-index: 10;">
+                        <i class="bi bi-record-circle-fill blink"></i> Recording... <span id="recordingTime">00:00</span>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info" id="infoAlert">
+                    <i class="bi bi-info-circle"></i> <strong>Note:</strong> Click "Start Call" to enable your camera and microphone. Allow browser permissions when prompted.
+                </div>
+                
+                <div class="alert alert-danger" id="errorAlert" style="display: none;">
+                    <i class="bi bi-exclamation-triangle"></i> <strong>Error:</strong> <span id="errorMessage"></span>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-clock"></i> Upcoming Calls</h6>
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Consultation with John Doe
+                                <span class="badge bg-primary">Today 3:00 PM</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Product Demo with Jane Smith
+                                <span class="badge bg-secondary">Tomorrow 10:00 AM</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-telephone"></i> Call History</h6>
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Mike Johnson
+                                <span class="badge bg-success">45 min</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Sarah Williams
+                                <span class="badge bg-success">30 min</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Document Chamber Tab -->
+        <div class="tab-content" id="documents">
+            <div class="feature-card">
+                <h4><i class="bi bi-file-earmark-text-fill"></i> Document Chamber</h4>
+                <p class="text-muted mb-4">Upload, review, and sign your documents securely</p>
+                
+                <!-- Upload Zone -->
+                <div class="upload-zone" onclick="document.getElementById('fileUpload').click()">
+                    <i class="bi bi-cloud-upload"></i>
+                    <h5>Drop files here or click to upload</h5>
+                    <p class="text-muted">Supported: PDF, DOC, DOCX (Max 10MB)</p>
+                    <input type="file" id="fileUpload" hidden accept=".pdf,.doc,.docx">
+                </div>
+                
+                <!-- Document List -->
+                <div class="document-list">
+                    <h6 class="mb-3"><i class="bi bi-folder"></i> My Documents</h6>
+                    
+                    <div class="document-item">
+                        <div class="document-info">
+                            <div class="document-icon">
+                                <i class="bi bi-file-pdf"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Investment Agreement</h6>
+                                <p class="text-muted small mb-0">Uploaded: Jan 15, 2026 • 2.5 MB</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="status-badge signed">Signed</span>
+                            <button class="btn btn-sm btn-outline-custom">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-item">
+                        <div class="document-info">
+                            <div class="document-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Non-Disclosure Agreement</h6>
+                                <p class="text-muted small mb-0">Uploaded: Jan 20, 2026 • 1.8 MB</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="status-badge review">In Review</span>
+                            <button class="btn btn-sm btn-outline-custom">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-item">
+                        <div class="document-info">
+                            <div class="document-icon">
+                                <i class="bi bi-file-text"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Service Contract</h6>
+                                <p class="text-muted small mb-0">Uploaded: Jan 25, 2026 • 3.2 MB</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="status-badge draft">Draft</span>
+                            <button class="btn btn-sm btn-primary-custom" data-bs-toggle="modal" data-bs-target="#signatureModal">
+                                <i class="bi bi-pen"></i> Sign
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payments Tab -->
+        <div class="tab-content" id="payments">
+            <div class="feature-card p-0 border-0">
+                <!-- Wallet Card -->
+                <div class="wallet-card">
+                    <p class="mb-2">Available Balance</p>
+                    <div class="wallet-balance">$12,450.00</div>
+                    <p class="mb-0 opacity-75">Last updated: Today, 2:30 PM</p>
+                    
+                    <div class="wallet-actions">
+                        <button class="wallet-btn" data-bs-toggle="modal" data-bs-target="#depositModal">
+                            <i class="bi bi-plus-circle"></i> Deposit
+                        </button>
+                        <button class="wallet-btn" data-bs-toggle="modal" data-bs-target="#withdrawModal">
+                            <i class="bi bi-dash-circle"></i> Withdraw
+                        </button>
+                        <button class="wallet-btn" data-bs-toggle="modal" data-bs-target="#transferModal">
+                            <i class="bi bi-arrow-left-right"></i> Transfer
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Transaction History -->
+                <div class="px-4 pb-4">
+                    <h4 class="mb-4"><i class="bi bi-clock-history"></i> Transaction History</h4>
+                    
+                    <div class="transaction-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>From/To</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Feb 15, 2026</td>
+                                    <td><i class="bi bi-arrow-down-circle text-success"></i> Deposit</td>
+                                    <td>Bank Account</td>
+                                    <td class="text-success">+$5,000.00</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Feb 14, 2026</td>
+                                    <td><i class="bi bi-arrow-right-circle text-primary"></i> Transfer</td>
+                                    <td>John Entrepreneur</td>
+                                    <td class="text-danger">-$2,500.00</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Feb 12, 2026</td>
+                                    <td><i class="bi bi-arrow-up-circle text-warning"></i> Withdraw</td>
+                                    <td>PayPal Account</td>
+                                    <td class="text-danger">-$1,000.00</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Feb 10, 2026</td>
+                                    <td><i class="bi bi-arrow-down-circle text-success"></i> Received</td>
+                                    <td>Sarah Investor</td>
+                                    <td class="text-success">+$3,500.00</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Tab -->
+        <div class="tab-content" id="security">
+            <!-- Password Settings -->
+            <div class="feature-card">
+                <h4><i class="bi bi-lock-fill"></i> Password Settings</h4>
+                <p class="text-muted mb-4">Update your password and enable security features</p>
+                
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-control" placeholder="Enter current password">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                            <div class="password-strength-meter">
+                                <div class="password-strength-bar" id="strengthBar"></div>
+                            </div>
+                            <small class="text-muted" id="strengthText">Password strength: None</small>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" placeholder="Confirm new password">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom mt-3">Update Password</button>
+                </form>
+            </div>
+            
+            <!-- Two-Factor Authentication -->
+            <div class="feature-card">
+                <h4><i class="bi bi-shield-check"></i> Two-Factor Authentication</h4>
+                <p class="text-muted mb-4">Add an extra layer of security to your account</p>
+                
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> 2FA is currently <strong>disabled</strong>. Enable it to secure your account.
+                </div>
+                
+                <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#otpModal">
+                    <i class="bi bi-shield-plus"></i> Enable 2FA
+                </button>
+            </div>
+            
+            <!-- Login Activity -->
+            <div class="feature-card">
+                <h4><i class="bi bi-clock-history"></i> Recent Login Activity</h4>
+                <p class="text-muted mb-4">Monitor your account access</p>
+                
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-laptop text-primary"></i>
+                            <strong class="ms-2">Windows PC</strong>
+                            <p class="mb-0 text-muted small">Chrome • Lahore, Pakistan</p>
+                        </div>
+                        <span class="badge bg-success">Current Session</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-phone text-success"></i>
+                            <strong class="ms-2">iPhone 13</strong>
+                            <p class="mb-0 text-muted small">Safari • Karachi, Pakistan</p>
+                        </div>
+                        <span class="text-muted small">2 hours ago</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Profile Tab -->
+        <div class="tab-content" id="profile">
+            <!-- Role Selection -->
+            <div class="feature-card">
+                <h4><i class="bi bi-person-badge"></i> Account Type</h4>
+                <p class="text-muted mb-4">Choose your role on the platform</p>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="role-card active">
+                            <i class="bi bi-briefcase-fill"></i>
+                            <h5>Entrepreneur</h5>
+                            <p class="text-muted">Seek investment and grow your business</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="role-card">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <h5>Investor</h5>
+                            <p class="text-muted">Discover and fund promising ventures</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Information -->
+            <div class="feature-card">
+                <h4><i class="bi bi-person-circle"></i> Profile Information</h4>
+                <p class="text-muted mb-4">Update your personal information</p>
+                
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" value="{% if user.is_authenticated %}{{ user.first_name }}{% endif %}" placeholder="First Name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" value="{% if user.is_authenticated %}{{ user.last_name }}{% endif %}" placeholder="Last Name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" placeholder="email@example.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" placeholder="+92 300 1234567">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-control" rows="4" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom mt-3">Save Changes</button>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Signature Modal -->
+<div class="modal fade" id="signatureModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pen"></i> E-Signature</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Please sign below to approve the document</p>
+                <canvas id="signaturePad" class="signature-pad" width="700" height="200"></canvas>
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-outline-custom" id="clearSignature">
+                        <i class="bi bi-x-circle"></i> Clear
+                    </button>
+                    <button class="btn btn-primary-custom" id="saveSignature">
+                        <i class="bi bi-check-circle"></i> Save Signature
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OTP Modal -->
+<div class="modal fade" id="otpModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-shield-check"></i> Enable 2FA</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="text-muted">Enter the 6-digit code sent to your phone</p>
+                <div class="otp-input-group">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                </div>
+                <button class="btn btn-primary-custom w-100">Verify & Enable</button>
+                <p class="mt-3 text-muted small">Didn't receive code? <a href="#">Resend</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Deposit Modal -->
+<div class="modal fade" id="depositModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Deposit Funds</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select">
+                            <option>Credit Card</option>
+                            <option>Bank Transfer</option>
+                            <option>PayPal</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100">Deposit Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div class="modal fade" id="withdrawModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-dash-circle"></i> Withdraw Funds</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" placeholder="0.00">
+                        </div>
+                        <small class="text-muted">Available: $12,450.00</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Withdraw To</label>
+                        <select class="form-select">
+                            <option>Bank Account (****1234)</option>
+                            <option>PayPal</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100">Withdraw Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transfer Modal -->
+<div class="modal fade" id="transferModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-arrow-left-right"></i> Transfer Funds</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Recipient</label>
+                        <input type="text" class="form-control" placeholder="Username or email">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Note (Optional)</label>
+                        <textarea class="form-control" rows="2" placeholder="Add a note..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100">Transfer Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+// Tab Switching
+document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+    });
+});
+
+// ===================== LIVE VIDEO CALLING WITH WEBRTC =====================
+let localStream = null;
+let videoEnabled = true;
+let audioEnabled = true;
+let screenSharing = false;
+let isCallActive = false;
+
+// Recording variables
+let mediaRecorder = null;
+let recordedChunks = [];
+let isRecording = false;
+let recordingStartTime = null;
+let recordingTimer = null;
+
+const localVideo = document.getElementById('localVideo');
+const videoPlaceholder = document.getElementById('videoPlaceholder');
+const startCallBtn = document.getElementById('startCallBtn');
+const videoControls = document.getElementById('videoControls');
+const infoAlert = document.getElementById('infoAlert');
+const errorAlert = document.getElementById('errorAlert');
+const errorMessage = document.getElementById('errorMessage');
+const recordingStatus = document.getElementById('recordingStatus');
+const recordingTime = document.getElementById('recordingTime');
+
+// Start Call - Access Camera and Microphone
+startCallBtn.addEventListener('click', async function() {
+    try {
+        // Request camera and microphone access
+        localStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            },
+            audio: true
+        });
+        
+        // Display video stream
+        localVideo.srcObject = localStream;
+        
+        // Update UI
+        localVideo.style.display = 'block';
+        videoPlaceholder.style.display = 'none';
+        startCallBtn.style.display = 'none';
+        videoControls.style.display = 'flex';
+        infoAlert.style.display = 'none';
+        errorAlert.style.display = 'none';
+        
+        isCallActive = true;
+        
+        console.log('Call started successfully!');
+        
+    } catch (error) {
+        console.error('Error accessing media devices:', error);
+        
+        // Show error message
+        errorAlert.style.display = 'block';
+        
+        if (error.name === 'NotAllowedError') {
+            errorMessage.textContent = 'Camera/microphone access denied. Please allow permissions in your browser settings.';
+        } else if (error.name === 'NotFoundError') {
+            errorMessage.textContent = 'No camera or microphone found on your device.';
+        } else {
+            errorMessage.textContent = 'Could not access camera/microphone: ' + error.message;
+        }
+    }
+});
+
+// Toggle Video
+document.getElementById('toggleVideo').addEventListener('click', function() {
+    if (!localStream) return;
+    
+    videoEnabled = !videoEnabled;
+    
+    // Enable/disable video track
+    localStream.getVideoTracks().forEach(track => {
+        track.enabled = videoEnabled;
+    });
+    
+    // Update button
+    this.classList.toggle('active');
+    this.innerHTML = videoEnabled 
+        ? '<i class="bi bi-camera-video-fill"></i>' 
+        : '<i class="bi bi-camera-video-off-fill"></i>';
+    
+    // Show/hide video placeholder
+    if (videoEnabled) {
+        localVideo.style.display = 'block';
+        videoPlaceholder.style.display = 'none';
+    } else {
+        localVideo.style.display = 'none';
+        videoPlaceholder.style.display = 'flex';
+    }
+});
+
+// Toggle Audio
+document.getElementById('toggleAudio').addEventListener('click', function() {
+    if (!localStream) return;
+    
+    audioEnabled = !audioEnabled;
+    
+    // Enable/disable audio track
+    localStream.getAudioTracks().forEach(track => {
+        track.enabled = audioEnabled;
+    });
+    
+    // Update button
+    this.classList.toggle('active');
+    this.innerHTML = audioEnabled 
+        ? '<i class="bi bi-mic-fill"></i>' 
+        : '<i class="bi bi-mic-mute-fill"></i>';
+});
+
+// Toggle Screen Share
+document.getElementById('toggleScreen').addEventListener('click', async function() {
+    if (!isCallActive) return;
+    
+    try {
+        if (!screenSharing) {
+            // Start screen sharing
+            const screenStream = await navigator.mediaDevices.getDisplayMedia({
+                video: {
+                    cursor: "always"
+                },
+                audio: false
+            });
+            
+            // Replace video track with screen track
+            const screenTrack = screenStream.getVideoTracks()[0];
+            const videoTrack = localStream.getVideoTracks()[0];
+            
+            // Replace the track
+            localVideo.srcObject = screenStream;
+            
+            screenSharing = true;
+            this.classList.add('active');
+            
+            // Listen for user stopping screen share
+            screenTrack.onended = () => {
+                // Switch back to camera
+                localVideo.srcObject = localStream;
+                screenSharing = false;
+                this.classList.remove('active');
+            };
+            
+        } else {
+            // Stop screen sharing and switch back to camera
+            localVideo.srcObject = localStream;
+            screenSharing = false;
+            this.classList.remove('active');
+        }
+    } catch (error) {
+        console.error('Error sharing screen:', error);
+        alert('Could not share screen: ' + error.message);
+    }
+});
+
+// Toggle Recording
+document.getElementById('toggleRecording').addEventListener('click', function() {
+    if (!localStream) return;
+    
+    if (!isRecording) {
+        startRecording();
+    } else {
+        stopRecording();
+    }
+});
+
+// Start Recording
+function startRecording() {
+    try {
+        recordedChunks = [];
+        
+        // Create MediaRecorder
+        const options = {
+            mimeType: 'video/webm;codecs=vp9',
+            videoBitsPerSecond: 2500000 // 2.5 Mbps
+        };
+        
+        // Try different codecs if vp9 not supported
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            options.mimeType = 'video/webm;codecs=vp8';
+        }
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            options.mimeType = 'video/webm';
+        }
+        
+        mediaRecorder = new MediaRecorder(localStream, options);
+        
+        // Handle data available
+        mediaRecorder.ondataavailable = function(event) {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+        
+        // Handle recording stop
+        mediaRecorder.onstop = function() {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            
+            // Create download link
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `video-call-${Date.now()}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            console.log('Recording saved and downloaded!');
+        };
+        
+        // Start recording
+        mediaRecorder.start();
+        isRecording = true;
+        recordingStartTime = Date.now();
+        
+        // Show recording status
+        recordingStatus.style.display = 'block';
+        
+        // Update button
+        document.getElementById('toggleRecording').classList.add('active');
+        document.getElementById('toggleRecording').style.background = '#28a745';
+        document.getElementById('toggleRecording').innerHTML = '<i class="bi bi-stop-circle-fill"></i>';
+        
+        // Start timer
+        updateRecordingTime();
+        recordingTimer = setInterval(updateRecordingTime, 1000);
+        
+        console.log('Recording started');
+        
+    } catch (error) {
+        console.error('Error starting recording:', error);
+        alert('Could not start recording: ' + error.message);
+    }
+}
+
+// Stop Recording
+function stopRecording() {
+    if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        
+        // Hide recording status
+        recordingStatus.style.display = 'none';
+        
+        // Update button
+        document.getElementById('toggleRecording').classList.remove('active');
+        document.getElementById('toggleRecording').style.background = '#dc3545';
+        document.getElementById('toggleRecording').innerHTML = '<i class="bi bi-record-circle"></i>';
+        
+        // Clear timer
+        clearInterval(recordingTimer);
+        recordingTime.textContent = '00:00';
+        
+        console.log('Recording stopped');
+    }
+}
+
+// Update Recording Time
+function updateRecordingTime() {
+    if (!isRecording) return;
+    
+    const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+    const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const seconds = (elapsed % 60).toString().padStart(2, '0');
+    
+    recordingTime.textContent = `${minutes}:${seconds}`;
+}
+
+// End Call
+document.getElementById('endCall').addEventListener('click', function() {
+    if (confirm('Are you sure you want to end this call?')) {
+        // Stop recording if active
+        if (isRecording) {
+            stopRecording();
+        }
+        // Stop all media tracks
+        if (localStream) {
+            localStream.getTracks().forEach(track => {
+                track.stop();
+            });
+            localStream = null;
+        }
+        
+        // Reset UI
+        localVideo.style.display = 'none';
+        localVideo.srcObject = null;
+        videoPlaceholder.style.display = 'flex';
+        startCallBtn.style.display = 'block';
+        videoControls.style.display = 'none';
+        infoAlert.style.display = 'block';
+        errorAlert.style.display = 'none';
+        
+        // Reset states
+        videoEnabled = true;
+        audioEnabled = true;
+        screenSharing = false;
+        isCallActive = false;
+        
+        // Reset button states
+        document.querySelectorAll('.control-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        document.getElementById('toggleVideo').innerHTML = '<i class="bi bi-camera-video-fill"></i>';
+        document.getElementById('toggleAudio').innerHTML = '<i class="bi bi-mic-fill"></i>';
+        
+        console.log('Call ended');
+    }
+});
+
+// Password Strength Meter
+document.getElementById('newPassword').addEventListener('input', function() {
+    const password = this.value;
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    
+    let strength = 0;
+    if(password.length >= 8) strength++;
+    if(/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if(/[0-9]/.test(password)) strength++;
+    if(/[^a-zA-Z0-9]/.test(password)) strength++;
+    
+    strengthBar.className = 'password-strength-bar';
+    if(strength === 0) {
+        strengthBar.classList.add('weak');
+        strengthText.textContent = 'Password strength: Very Weak';
+    } else if(strength <= 2) {
+        strengthBar.classList.add('weak');
+        strengthText.textContent = 'Password strength: Weak';
+    } else if(strength === 3) {
+        strengthBar.classList.add('medium');
+        strengthText.textContent = 'Password strength: Medium';
+    } else {
+        strengthBar.classList.add('strong');
+        strengthText.textContent = 'Password strength: Strong';
+    }
+});
+
+// Signature Pad
+const canvas = document.getElementById('signaturePad');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mouseout', stopDrawing);
+
+function startDrawing(e) {
+    isDrawing = true;
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function draw(e) {
+    if(!isDrawing) return;
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+document.getElementById('clearSignature').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+document.getElementById('saveSignature').addEventListener('click', () => {
+    alert('Signature saved successfully!');
+    const modal = bootstrap.Modal.getInstance(document.getElementById('signatureModal'));
+    modal.hide();
+});
+
+// OTP Input Auto-focus
+document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
+    input.addEventListener('input', function() {
+        if(this.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+    });
+    
+    input.addEventListener('keydown', function(e) {
+        if(e.key === 'Backspace' && this.value === '' && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
+});
+
+// Role Card Selection
+document.querySelectorAll('.role-card').forEach(card => {
+    card.addEventListener('click', function() {
+        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+// File Upload Handler
+document.getElementById('fileUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(file) {
+        alert(`File "${file.name}" uploaded successfully (mockup)`);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Services - CarHub{% endblock %}
+
+{% block content %}
+    <section class="page-header bg-primary text-white py-5">
+        <div class="container text-center">
+            <h1 class="fw-bold">Our Services</h1>
+            <p class="lead mb-0">Everything you need for buying and selling cars</p>
+        </div>
+    </section>
+
+    <!--  DJANGO MESSAGES DISPLAY  -->
+    {% if messages %}
+    <div class="container mt-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %}-fill me-2"></i>
+            <strong>{{ message }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <section class="services-section py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card service-card h-100 shadow border-0">
+                        <div class="card-body text-center p-4">
+                            <i class="bi bi-cart-check-fill display-3 text-primary mb-3"></i>
+                            <h3 class="fw-bold mb-3">Buy Cars</h3>
+                            <p class="text-muted">Browse through thousands of verified cars from trusted sellers.</p>
+                            <ul class="list-unstyled text-start mt-3">
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Verified Listings</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Detailed Information</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Price Comparison</li>
+                            </ul>
+                            <button class="btn btn-primary mt-3" onclick="window.location.href=window.location.origin + '/'">Browse Cars</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card service-card h-100 shadow border-0">
+                        <div class="card-body text-center p-4">
+                            <i class="bi bi-cash-stack display-3 text-success mb-3"></i>
+                            <h3 class="fw-bold mb-3">Sell Cars</h3>
+                            <p class="text-muted">List your car for free and reach thousands of potential buyers.</p>
+                            <ul class="list-unstyled text-start mt-3">
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Free Listings</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Wide Reach</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Quick Sales</li>
+                            </ul>
+                            <button class="btn btn-success mt-3" onclick="window.location.href=window.location.origin + '/signup/'">List Your Car</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card service-card h-100 shadow border-0">
+                        <div class="card-body text-center p-4">
+                            <i class="bi bi-calculator-fill display-3 text-info mb-3"></i>
+                            <h3 class="fw-bold mb-3">Car Valuation</h3>
+                            <p class="text-muted">Get instant and accurate valuation of your car.</p>
+                            <ul class="list-unstyled text-start mt-3">
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Instant Valuation</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Market Analysis</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Free Service</li>
+                            </ul>
+                            <button class="btn btn-info mt-3" onclick="window.location.href=window.location.origin + '/contact/'">Value My Car</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="additional-services py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">Additional Services</h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm">
+                        <i class="bi bi-shield-check display-4 text-primary mb-3"></i>
+                        <h5 class="fw-bold">Car Inspection</h5>
+                        <p class="text-muted small mb-0">Professional inspection services</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm">
+                        <i class="bi bi-file-earmark-text display-4 text-success mb-3"></i>
+                        <h5 class="fw-bold">Documentation</h5>
+                        <p class="text-muted small mb-0">Complete paperwork assistance</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm">
+                        <i class="bi bi-credit-card display-4 text-warning mb-3"></i>
+                        <h5 class="fw-bold">Financing</h5>
+                        <p class="text-muted small mb-0">Flexible payment plans</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm">
+                        <i class="bi bi-tools display-4 text-danger mb-3"></i>
+                        <h5 class="fw-bold">Support</h5>
+                        <p class="text-muted small mb-0">After sales support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">How It Works</h2>
+            <div class="row g-4">
+                <div class="col-md-3 text-center">
+                    <div class="step-number mb-3">1</div>
+                    <h5 class="fw-bold">Sign Up</h5>
+                    <p class="text-muted">Create your free account</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="step-number mb-3">2</div>
+                    <h5 class="fw-bold">Search or List</h5>
+                    <p class="text-muted">Browse or list your car</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="step-number mb-3">3</div>
+                    <h5 class="fw-bold">Connect</h5>
+                    <p class="text-muted">Contact buyers or sellers</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="step-number mb-3">4</div>
+                    <h5 class="fw-bold">Complete Deal</h5>
+                    <p class="text-muted">Finalize your transaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section py-5 bg-primary text-white">
+        <div class="container py-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
+                    <p class="lead mb-4">Join thousands of satisfied customers on CarHub</p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <button class="btn btn-light btn-lg" onclick="window.location.href=window.location.origin + '/signup/'">Sign Up Now</button>
+                        <button class="btn btn-outline-light btn-lg" onclick="window.location.href=window.location.origin + '/contact/'">Contact Us</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/service.js' %}"></script>
+{% endblock %}

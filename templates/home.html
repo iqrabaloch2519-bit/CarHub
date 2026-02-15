@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - CarHub{% endblock %}
+
+{% block content %}
+
+ 
+ 
+    <!-- Hero Section with Real Car Image -->
+    <section class="hero-section text-white py-5">
+        <div class="container py-5">
+            <div class="row align-items-center hero-content">
+                <div class="col-lg-7">
+                    <h1 class="display-3 fw-bold mb-3">Find Your Dream Car</h1>
+                    <p class="lead mb-4">Buy and sell cars with ease on Pakistan's most trusted platform</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-5 shadow-lg">
+                            <i class="bi bi-person-plus me-2"></i>Get Started
+                        </a>
+                        <a href="#featured-cars" class="btn btn-outline-light btn-lg px-5">
+                            <i class="bi bi-search me-2"></i>Explore Cars
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Real Car Image -->
+       <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500"
+             alt="BMW M5 Car" 
+             class="hero-car-image"
+             loading="lazy">
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section py-5 bg-white shadow-sm">
+        <div class="container">
+            <h3 class="text-center mb-4 fw-bold">
+                <i class="bi bi-search me-2"></i>
+                Search Your Perfect Car
+            </h3>
+            <form id="searchForm" class="row g-3" method="GET" action="{% url 'home' %}">
+                <div class="col-md-3">
+                    <select class="form-select form-select-lg" name="brand">
+                        <option selected>Select Brand</option>
+                        <option value="toyota">Toyota</option>
+                        <option value="honda">Honda</option>
+                        <option value="suzuki">Suzuki</option>
+                        <option value="bmw">BMW</option>
+                        <option value="mercedes">Mercedes</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select form-select-lg" name="year">
+                        <option selected>Select Model Year</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select form-select-lg" name="price_range">
+                        <option selected>Price Range</option>
+                        <option value="0-1000000">Under 10 Lakh</option>
+                        <option value="1000000-2000000">10-20 Lakh</option>
+                        <option value="2000000-5000000">20-50 Lakh</option>
+                        <option value="5000000+">Above 50 Lakh</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="bi bi-search me-2"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+<!-- Featured Cars Section -->
+<section id="featured-cars" class="featured-cars py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Featured Cars</h2>
+            <p class="text-muted">Explore our handpicked selection of premium vehicles</p>
+        </div>
+        
+        <!-- Debug Info  -->
+        <div class="alert alert-info">
+            <strong>🔍 Debug:</strong> Products count = {{ products|length }} | 
+            Products exist: {% if products %}YES {% else %}NO {% endif %}
+        </div>
+        
+        <div class="row g-4" id="featuredCars">
+            {% if products %}
+                {% for product in products %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card car-card h-100 shadow-sm">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?w=400&h=250&fit=crop" class="card-img-top" alt="Car" style="height: 250px; object-fit: cover;">
+                        {% endif %}
+                    
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <h4 class="car-price text-primary fw-bold">Rs {{ product.price|floatformat:0 }}</h4>
+                        
+                            <div class="car-specs d-flex justify-content-between mb-3">
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-calendar"></i> {{ product.created_at.year }}
+                                </span>
+                                <span class="badge bg-success">
+                                    <i class="bi bi-box"></i> Stock: {{ product.stock }}
+                                </span>
+                                <span class="badge bg-info">
+                                    <i class="bi bi-tag"></i> {{ product.category.name }}
+                                </span>
+                            </div>
+                            
+                            {% if product.description %}
+                            <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                            {% endif %}
+                            
+                            <!-- View Details Button -->
+                             <a href="{% url 'service' %}" class="btn btn-primary w-100">
+                                <i class="bi bi-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>No featured cars available!</strong> Please add products in admin panel.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-2">Why Choose CarHub?</h2>
+            <p class="text-center text-muted mb-5">Your trusted partner in car buying and selling</p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 h-100 text-center p-4 shadow-sm">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-shield-check display-3 text-primary"></i>
+                            </div>
+                            <h4 class="fw-bold">Verified Sellers</h4>
+                            <p class="text-muted">All our sellers are verified to ensure a safe buying experience</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 h-100 text-center p-4 shadow-sm">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-cash-coin display-3 text-success"></i>
+                            </div>
+                            <h4 class="fw-bold">Best Prices</h4>
+                            <p class="text-muted">Compare prices and get the best deals on your dream car</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 h-100 text-center p-4 shadow-sm">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-headset display-3 text-info"></i>
+                            </div>
+                            <h4 class="fw-bold">24/7 Support</h4>
+                            <p class="text-muted">Our customer support team is always ready to help you</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section py-5 text-white">
+        <div class="container py-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
+                    <p class="lead mb-4">Join thousands of satisfied customers on CarHub</p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-5">
+                            <i class="bi bi-person-plus me-2"></i>Sign Up Now
+                        </a>
+                        <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg px-5">
+                            <i class="bi bi-envelope me-2"></i>Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
