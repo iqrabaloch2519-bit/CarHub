@@ -137,5 +137,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
+
+# Static files configuration
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# If you have a static folder in your app
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
+
 
 
